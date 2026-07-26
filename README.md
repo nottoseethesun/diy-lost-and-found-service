@@ -1,5 +1,8 @@
 # DIY Lost-and-Found Service
 
+[![tests](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml)
+[![security](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/security.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/security.yml)
+
 A self-hosted lost-and-found system built around printed **QR-code labels**.
 Stick a label on a thing you'd hate to lose; if someone finds it and scans the
 code, they land on a private contact page telling them how to reach you — **without

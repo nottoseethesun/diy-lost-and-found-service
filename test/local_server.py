@@ -11,7 +11,7 @@ import http.server
 import os
 import re
 import socketserver
-import subprocess
+import subprocess  # nosec B404
 import sys
 
 PORT = int(os.environ["TESTPORT"])
@@ -34,7 +34,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(b"<!doctype html><title>Not Found</title>")
             return
         env = dict(base_env, PATH_INFO=self.path)
-        out = subprocess.run(
+        # Fixed argv (interpreter + found.cgi), no shell, no untrusted input in
+        # the command -- only the request path flows in as PATH_INFO, which
+        # found.cgi re-validates against SLUG_PATTERN before any file access.
+        out = subprocess.run(  # nosec B603
             [sys.executable, "found.cgi"], cwd=CGI, env=env, capture_output=True
         ).stdout
         head, _, body = out.partition(b"\r\n\r\n")
@@ -42,9 +45,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
         for line in head.split(b"\r\n"):
             low = line.lower()
             if low.startswith(b"status:"):
+                # best-effort parse of the CGI Status line; default to 200
                 try:
                     status = int(line.split()[1])
-                except Exception:
+                except Exception:  # nosec B110
                     pass
             elif low.startswith(b"content-type:"):
                 ctype = line.split(b":", 1)[1].strip().decode() or ctype

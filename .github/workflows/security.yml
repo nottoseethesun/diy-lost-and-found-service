@@ -1,0 +1,28 @@
+name: security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install bandit
+        run: python -m pip install --upgrade pip bandit
+
+      - name: Run bandit (Python security lint)
+        # found.cgi has no .py extension, so it is named explicitly; the test
+        # helper's intentional, reviewed findings are annotated with # nosec.
+        run: bandit -r print-kit test found-cgi/found.cgi -x '*/.venv/*'
