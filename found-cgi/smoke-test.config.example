@@ -1,0 +1,9 @@
+# smoke-test.sh reads this file. EXPECT_CONTACTS is a space-separated list
+# of substrings that must appear on a rendered /found/<slug> contact page
+# (e.g. your email domain). Set it to match your config.json contact values.
+# If this file is absent, smoke-test.sh falls back to a structural check
+# (the page must contain at least two mailto: links).
+#
+# Copy to smoke-test.config (git-ignored) and fill in real values:
+#   ./init-local-files.sh
+EXPECT_CONTACTS="example.com"

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>You found something of mine</title>
+<style>
+  body {{
+    font-family: system-ui, sans-serif;
+    max-width: 28rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.5;
+    color: #222;
+  }}
+
+  h1 {{
+    font-size: 1.4rem;
+  }}
+
+  h2 {{
+    font-size: 1.05rem;
+    margin-top: 2rem;
+    color: #444;
+  }}
+
+  .contact a {{
+    display: block;
+    margin: 0.75rem 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid #bbb;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #1a4d8f;
+    font-weight: 600;
+    text-align: center;
+  }}
+
+  .plain {{
+    color: #555;
+    font-size: 0.95rem;
+  }}
+
+  .reward {{
+    margin-top: 1.5rem;
+    color: #555;
+  }}
+</style>
+</head>
+<body>
+<h1>Thank you &mdash; you found something of mine!</h1>
+<p>This item belongs to {owner_name}. Please get in touch so I can
+arrange to get it back.</p>
+<div class="contact">
+  <a href="sms:{phone}">&#128172; Text {phone_display}</a>
+  <a href="tel:{phone}">&#128222; Call {phone_display}</a>
+  <a href="mailto:{email}?subject={subject}">&#9993;&#65039; Email {email}</a>
+</div>
+<h2>Can't reach me? Backup contact:</h2>
+<div class="contact">
+  <a href="sms:{backup_phone}">&#128172; Text {backup_phone_display}</a>
+  <a href="tel:{backup_phone}">&#128222; Call {backup_phone_display}</a>
+  <a href="mailto:{backup_email}?subject={subject}">&#9993;&#65039; Email {backup_email}</a>
+</div>
+<p class="plain">If the buttons don't work: text or call
+<strong>{phone_display}</strong> (backup: <strong>{backup_phone_display}</strong>),
+or email <strong>{email}</strong> (backup: <strong>{backup_email}</strong>).</p>
+<p class="reward">{reward_text}</p>
+</body>
+</html>

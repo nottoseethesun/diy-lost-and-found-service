@@ -1,0 +1,23 @@
+# Local data files — contain contact PII and secret capability slugs.
+# NEVER commit these. Recreate blank copies from the committed *.example.*
+# templates with:  ./init-local-files.sh
+found-cgi/config.json
+found-cgi/slugs.txt
+tag-manifest.csv
+/config.json
+found-cgi/smoke-test.config
+
+# Generated output — label PDFs, QR PNGs, and other build artifacts
+/output/
+
+# User-supplied Avery template PDFs: not project source, and likely Avery's
+# protected property — never commit or redistribute
+print-kit/avery-templates/
+
+# Private media (photos etc.) not meant for publication
+media/private/
+
+# Python virtualenv and caches
+.venv/
+__pycache__/
+*.pyc

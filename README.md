@@ -1,0 +1,274 @@
+# DIY Lost-and-Found Service
+
+A self-hosted lost-and-found system built around printed **QR-code labels**.
+Stick a label on a thing you'd hate to lose; if someone finds it and scans the
+code, they land on a private contact page telling them how to reach you — **without
+any of your personal details being printed on the label itself.** You mint the
+codes, print them onto peel-and-stick Avery film, and host a tiny page that
+answers the scans.
+
+## How it works
+
+Each label encodes a URL of the form `https://<your-domain>/found/<slug>`, where
+every `<slug>` is a 20-character random token (~119 bits from a CSPRNG). The
+system has two halves:
+
+- **[`print-kit/`](print-kit/README.md)** — `gen-labels.py` turns a list of
+  slugs into print-ready PDF sheets of unique QR labels for Avery blank stock
+  (2"x2" Avery 64510/94107 and 1"x1" Avery 94103). The label's only human-readable
+  text is a short caption (`SCAN IF FOUND: REWARD. #nnn`).
+- **[`found-cgi/`](found-cgi/README.md)** — the serving side: a small Apache CGI
+  that answers `/found/<slug>`. A registered slug renders your contact page
+  (text / call / email, with a backup contact); **every other request returns an
+  identical generic 404**, so tags can't be enumerated or probed for.
+
+End to end:
+
+```
+mint slugs ─► generate label PDFs (print-kit) ─► print onto Avery film ─► apply tags
+                                                                              │
+                          finder scans a tag ─► https://<your-domain>/found/<slug>
+                                                                              │
+                                              found-cgi renders your contact page
+```
+
+The slug→item record (`tag-manifest.csv`) is something you keep privately and is
+never uploaded to the server.
+
+**Proven on classic shared hosting.** The serving half is deliberately built to
+older, minimal conventions: a **classic Apache CGI** — one short-lived,
+stdlib-only Python 3.7+ process per request, wired up entirely through
+`.htaccess` (`RewriteRule` + `SetEnv`), with no daemon, no persistent state, no
+container, and no root. Because it asks so little of its host, it runs on a plain
+remote shared-hosting account — little more than a docroot, an `.htaccess`, and a
+CGI directory — and has been deployed to and verified over the wire on exactly
+such a host. If it serves tags there, it will serve them almost anywhere.
+
+## Repository layout
+
+```
+README.md              this file
+LICENSE                Apache License 2.0
+config.example.json    template for the project config (baseUrl, deploy)
+config.json            your real project config — GIT-IGNORED (bootstrapped)
+init-local-files.sh    recreate git-ignored data files from *.example.* templates
+tag-manifest.example.csv   template for tag-manifest.csv
+tag-manifest.csv       your tag#→slug→url record — GIT-IGNORED
+print-kit/             label generation           → print-kit/README.md
+found-cgi/             the contact-page server    → found-cgi/README.md
+test/                  one-command test suite     → test/run.sh
+media/                 screenshots for these docs (media/private/ is git-ignored)
+output/                generated PDFs & QR PNGs — GIT-IGNORED
+```
+
+Real data (contact details, slugs, the manifest, your domain) lives only in
+**git-ignored** files that you create from the committed `*.example.*` templates;
+nothing personal is ever committed. See [Install](#install) and
+[Security & privacy](#security--privacy).
+
+## Install
+
+This gets you from a fresh clone to a generated label PDF.
+
+### Prerequisites
+
+- **Python 3.8+** and **Bash** (for label generation on your workstation).
+- Python packages **`qrcode`** and **`reportlab`** (installed below).
+- Serving the pages needs a host with Apache (`mod_rewrite`, `AllowOverride
+  FileInfo`) and Python 3.7+ — see [`found-cgi/`](found-cgi/README.md). Not
+  required just to generate labels.
+
+### 1. Clone
+
+```bash
+git clone <your-repo-url> diy-lost-and-found-service
+cd diy-lost-and-found-service
+```
+
+### 2. Create your local data files
+
+The real config/data files are git-ignored; recreate blank ones from the
+committed templates, then fill them in:
+
+```bash
+./init-local-files.sh
+```
+
+This creates (if missing) `config.json`, `found-cgi/config.json`,
+`found-cgi/slugs.txt`, `found-cgi/smoke-test.config`, and `tag-manifest.csv`.
+Edit at least:
+
+- **`config.json`** — set `baseUrl` to your domain (used as the QR base).
+- **`found-cgi/config.json`** — your contact details (see
+  [`found-cgi/README.md`](found-cgi/README.md) for the fields).
+
+### 3. Mint your slugs
+
+Each tag needs a unique, unguessable slug. Generate 100 of them (20 random
+alphanumerics each) straight into the slug list:
+
+```bash
+python3 -c "import secrets,string; a=string.ascii_letters+string.digits; \
+print('\n'.join(''.join(secrets.choice(a) for _ in range(20)) for _ in range(100)))" \
+  > found-cgi/slugs.txt
+```
+
+Keep this file (and `tag-manifest.csv`, if you build one to record which tag is
+which) private — the slugs are capability tokens.
+
+### 4. Install the label-generation dependencies
+
+```bash
+cd print-kit
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install qrcode reportlab
+```
+
+(See [`print-kit/README.md`](print-kit/README.md) if `import qrcode` fails after
+install — it's almost always a `pip`/`python3` interpreter mismatch.)
+
+### 5. Generate a PDF
+
+```bash
+python3 gen-labels.py ../found-cgi/slugs.txt ../output/found-labels-avery94103-1inch.pdf --format 1x1
+python3 gen-labels.py ../found-cgi/slugs.txt ../output/found-labels-2x2-avery94107.pdf   --format 2x2
+```
+
+The PDFs land in the git-ignored `output/` directory. **Before printing, read
+[Usage](#usage) — the print settings matter.**
+
+## Usage
+
+### Configure
+
+Project settings live in the git-ignored **`config.json`** (created in Install
+step 2 from `config.example.json`):
+
+| Key | Used for |
+|-----|----------|
+| `baseUrl` | The QR base URL: labels encode `<baseUrl>/found/<slug>`. `gen-labels.py` reads it as the default `--base`. |
+| `deploy.host` / `deploy.user` / `deploy.docroot` / `deploy.dataDir` | Reference values for deploying `found-cgi` to your server. The installer takes the matching settings as `DOCROOT` / `DATADIR` / `BASE` environment overrides — see [`found-cgi/INSTALL.md`](found-cgi/INSTALL.md). |
+
+Because `config.json` is git-ignored, your real domain and host never enter the
+repository.
+
+### Generate labels
+
+See [Install step 5](#5-generate-a-pdf) and
+[`print-kit/README.md`](print-kit/README.md). Page 1 of every PDF is a
+calibration page; the label pages follow.
+
+### Print — set Page Scaling to "None" (required)
+
+The PDF is laid out at **exact size** for the Avery die-cut grid. If your PDF
+viewer or printer driver scales the page even slightly, the artwork drifts off
+the die-cuts — barely at the centre of the sheet, and **progressively worse
+toward every edge**, until ink touches or crosses the cut line on every label.
+This is the single most common way to ruin a sheet, and it is silent.
+
+**In the print dialog, set _Page Handling → Page Scaling_ to "None".** (In some
+dialogs the equivalent is "Actual size" or "100%".) **Never** leave it on
+**"Shrink to Printable Area"** or **"Fit to page"** — that is exactly what
+rescales the page and throws off registration. Leave *Auto Rotate and Center*
+checked.
+
+![Page Scaling dropdown with the three options, "None" selected](media/proper-page-set-up_one-of-two.png)
+
+![Page Handling tab: Page Scaling "None", Auto Rotate and Center checked](media/proper-page-set-up_two-of-two.png)
+
+Then **proof it before committing a full sheet of real Avery film:**
+
+1. Print **page 1 only** (the calibration page) on **plain paper**, with Page
+   Scaling **"None"**.
+2. Hold that print against an **unprinted Avery sheet**, up to a window or
+   lightbox. The printed cell outlines must sit exactly on the die-cut squares.
+
+   > Proof against an *unprinted* sheet — **not** against a print of Avery's own
+   > template. Two prints from the same driver shrink by the same amount, so they
+   > agree with each other while both disagree with the physical sheet. That is
+   > precisely how the misregistration hides from casual checking.
+
+3. If the grid is uniformly shifted, regenerate with `--xshift` / `--yshift`
+   (inches; positive = right / down) and re-proof. If it lines up, print the
+   remaining pages onto the Avery sheets.
+
+Print on a **laser printer or pigment inkjet** — dye-based inkjet ink smears on
+this film. Full stock-ordering and print-shop guidance is in
+[`print-kit/PRINT.md`](print-kit/PRINT.md).
+
+### Apply & verify
+
+Scan one printed label of **each** size with your phone and confirm the contact
+page loads **before** sticking tags on anything.
+
+## Test
+
+Run the whole suite with one command:
+
+```bash
+./test/run.sh
+```
+
+Its settings live in [`test/test-config.json`](test/test-config.json) (local
+server port, the `found-cgi` directory) — not a pile of environment variables.
+The suite runs static checks, a dependency + label-generation check, and an
+end-to-end run of the smoke test below against a local stand-in for the Apache
+routing (`test/local_server.py`); it tallies results and exits non-zero on
+failure, skipping the end-to-end part cleanly if you have no local data yet. To
+target a **deployed** site instead of the local server, set one env var:
+`BASE=https://your-domain.example ./test/run.sh`.
+
+### Over-the-wire smoke test
+
+`found-cgi` ships an over-the-wire smoke test
+([`found-cgi/smoke-test.sh`](found-cgi/README.md)) that checks the live site:
+valid slug → 200, unknown/malformed slug → 404, data dir not web-reachable, and
+that a rendered page actually shows your contacts.
+
+The contact check is **configurable, not hard-coded**. It reads
+`found-cgi/smoke-test.config` (git-ignored; created from
+`smoke-test.config.example` by `./init-local-files.sh`):
+
+```sh
+# found-cgi/smoke-test.config
+EXPECT_CONTACTS="yourdomain.com"   # space-separated substrings the page must contain
+```
+
+Set `EXPECT_CONTACTS` to identifiers you expect on your rendered page (e.g. your
+email domain). If the file is absent, the test falls back to a structural check
+(the page must carry at least two `mailto:` links), so it still runs on a fresh
+clone. Run it from the `found-cgi` deploy directory:
+
+```bash
+BASE=https://your-domain.example ./smoke-test.sh   # or set BASE in your environment
+```
+
+## Security & privacy
+
+- **Slugs are secrets.** A slug is a ~119-bit capability token; anyone with it
+  can view your contact page. `found-cgi/slugs.txt`, `tag-manifest.csv`, the
+  generated PDFs, and the QR images therefore stay **git-ignored** and out of any
+  public repo.
+- **No personal data is committed.** Contact details, slugs, the manifest, and
+  your domain live only in git-ignored files created from `*.example.*`
+  templates via `./init-local-files.sh`. The committed templates hold
+  placeholders only.
+- **The server leaks nothing.** Unknown, malformed, and revoked slugs all return
+  a byte-identical generic 404; responses carry `X-Robots-Tag: noindex`. Details
+  in [`found-cgi/README.md`](found-cgi/README.md).
+
+## Project documentation
+
+- **[`print-kit/README.md`](print-kit/README.md)** — generating label PDFs, the
+  `config.json` geometry data, and (optional) Avery templates.
+- **[`print-kit/PRINT.md`](print-kit/PRINT.md)** — ordering stock and the
+  physical print-shop procedure.
+- **[`found-cgi/README.md`](found-cgi/README.md)** — the contact-page server:
+  design, security properties, and configuration.
+- **[`found-cgi/INSTALL.md`](found-cgi/INSTALL.md)** — deploying `found-cgi` to a
+  shared host.
+
+## License
+
+Licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE).

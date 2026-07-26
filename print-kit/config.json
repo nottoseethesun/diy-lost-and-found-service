@@ -1,0 +1,163 @@
+{
+	"labelTemplates": {
+		"oneInchSquare": [
+			{
+				"brand": "avery",
+				"modelName": "Presta® Template",
+				"productId": "94103",
+				"templateCompatibility": [
+					"5658",
+					"69993",
+					"Presta 97197"
+				],
+				"url": "https://www.avery.com/templates/presta-94103",
+				"geometry": {
+					"units": "in",
+					"sheet": {
+						"name": "US Letter",
+						"width": 8.5,
+						"height": 11.0
+					},
+					"label": {
+						"width": 1.0,
+						"height": 1.0
+					},
+					"grid": {
+						"columns": 6,
+						"rows": 8,
+						"perSheet": 48
+					},
+					"pitch": {
+						"horizontal": 1.25,
+						"vertical": 1.25
+					},
+					"margins": {
+						"top": 0.625,
+						"right": 0.625,
+						"bottom": 0.625,
+						"left": 0.625
+					},
+					"gap": {
+						"horizontal": 0.25,
+						"vertical": 0.25
+					},
+					"provenance": "Measured from a photographed sheet and confirmed against Avery's product page (1x1, 48/sheet); reconciles exactly to 8.5x11 (0.625 + 6*1.0 + 5*0.25 + 0.625 = 8.5; 0.625 + 8*1.0 + 7*0.25 + 0.625 = 11). Sheet size independently confirmed from the template PDF MediaBox (612x792 pt)."
+				}
+			}
+		],
+		"twoInchSquare": [
+			{
+				"brand": "avery",
+				"modelName": "Presta® Template",
+				"productId": "94107",
+				"templateCompatibility": [
+					"22565",
+					"22806",
+					"22816",
+					"22853",
+					"22921",
+					"22960",
+					"5908",
+					"64503",
+					"64510",
+					"80510",
+					"Presta 36475",
+					"Presta 36476",
+					"Presta 36477",
+					"Presta 36478",
+					"Presta 36479",
+					"Presta 97198"
+				],
+				"url": "https://www.avery.com/templates/presta-94107",
+				"geometry": {
+					"units": "in",
+					"sheet": {
+						"name": "US Letter",
+						"width": 8.5,
+						"height": 11.0
+					},
+					"label": {
+						"width": 2.0,
+						"height": 2.0
+					},
+					"grid": {
+						"columns": null,
+						"rows": null,
+						"perSheet": 12
+					},
+					"pitch": {
+						"horizontal": null,
+						"vertical": null
+					},
+					"margins": {
+						"top": null,
+						"right": null,
+						"bottom": null,
+						"left": null
+					},
+					"gap": {
+						"horizontal": null,
+						"vertical": null
+					},
+					"provenance": "Avery confirms 2x2, 12 per sheet, US Letter; sheet size confirmed from the template MediaBox (612x792 pt). Grid (likely 3x4), pitch, margins, and gap are UNVERIFIED and left null: the template PDF does not encode extractable die-cut rectangles and no physical sheet was measured. Do not treat as known -- measure a physical sheet to complete. For reference only, gen-labels.py currently assumes 0.625in margins -> 3x4 grid with 2.625in/2.5833in pitch, but that is unconfirmed."
+				}
+			},
+			{
+				"brand": "avery",
+				"modelName": "Print-to-the-Edge Square Labels Template",
+				"productId": "64510",
+				"templateCompatibility": [
+					"22565",
+					"22806",
+					"22816",
+					"22853",
+					"22921",
+					"22960",
+					"5908",
+					"64503",
+					"80510",
+					"Presta 36475",
+					"Presta 36476",
+					"Presta 36477",
+					"Presta 36478",
+					"Presta 36479",
+					"Presta 94107",
+					"Presta 97198"
+				],
+				"url": "https://www.avery.com/templates/presta-64510",
+				"geometry": {
+					"units": "in",
+					"sheet": {
+						"name": "US Letter",
+						"width": 8.5,
+						"height": 11.0
+					},
+					"label": {
+						"width": 2.0,
+						"height": 2.0
+					},
+					"grid": {
+						"columns": null,
+						"rows": null,
+						"perSheet": 12
+					},
+					"pitch": {
+						"horizontal": null,
+						"vertical": null
+					},
+					"margins": {
+						"top": null,
+						"right": null,
+						"bottom": null,
+						"left": null
+					},
+					"gap": {
+						"horizontal": null,
+						"vertical": null
+					},
+					"provenance": "Avery confirms 2x2, 12 per sheet, US Letter; sheet size confirmed from the template MediaBox (612x792 pt). Grid (likely 3x4), pitch, margins, and gap are UNVERIFIED and left null: the template PDF does not encode extractable die-cut rectangles and no physical sheet was measured. Do not treat as known -- measure a physical sheet to complete. For reference only, gen-labels.py currently assumes 0.625in margins -> 3x4 grid with 2.625in/2.5833in pitch, but that is unconfirmed."
+				}
+			}
+		]
+	}
+}

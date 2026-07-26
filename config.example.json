@@ -1,0 +1,9 @@
+{
+  "baseUrl": "https://example.com",
+  "deploy": {
+    "host": "your-server.example.com",
+    "user": "your-username",
+    "docroot": "~/your-site-docroot",
+    "dataDir": "~/found-data"
+  }
+}

@@ -1,0 +1,22 @@
+# ~/your-site/.htaccess -- complete merged file.
+# First two lines are the existing WKD passthrough, unchanged.
+
+RewriteEngine On
+RewriteRule ^\.well-known/openpgpkey/ - [L]
+
+# Point found.cgi at its data files in ~/found-data, OUTSIDE the
+# docroot, so they are grouped in one place and not web-addressable
+# at all. SetEnv needs only AllowOverride FileInfo, the same class
+# the (working) rewrite rules already prove is enabled on this host.
+SetEnv FOUND_CONFIG   /home/youruser/found-data/config.json
+SetEnv FOUND_SLUGS    /home/youruser/found-data/slugs.txt
+SetEnv FOUND_TEMPLATE /home/youruser/found-data/page.html
+
+# Route /found/<slug> (exactly 20 URL-safe alphanumerics) to the CGI
+# via PATH_INFO. Anything else under /found falls through to the
+# filesystem and 404s without spawning a process. Deliberate split:
+# well-formed-but-unknown slugs reach the CGI and get its generic 404,
+# byte-identical to a revoked or never-issued slug, so no probe can
+# learn whether a given slug exists. Malformed paths get Apache's
+# stock 404 instead, which reveals only the accepted URL shape.
+RewriteRule ^found/([A-Za-z0-9]{20})$ /cgi-local/found.cgi/found/$1 [L]
