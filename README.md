@@ -1,3 +1,5 @@
+![Glowing white-orange QR Code floating in space above an orange-hued Planet Earth, with a Wise Owl and Tags and Items with QR Codes on them, and transparent puzzle pieces shown. Caption is: "Scan if found.  Reunite privately.  Build your own."](./media/diy-lost-and-found_privacy-first_social-preview-for-github-project-config-half.jpg "DIY Lost+Found Banner")
+
 # DIY Lost-and-Found Service
 
 [![tests](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml)
