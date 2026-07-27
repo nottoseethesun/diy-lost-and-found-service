@@ -16,25 +16,27 @@ answers the scans.
 ## Table of Contents
 
 - [Why Provide Your Own Lost+Found Service?](#why-provide-your-own-lostfound-service)
-- [How it works](#how-it-works)
-- [Repository layout](#repository-layout)
+- [How It Works](#how-it-works)
+- [Repository Layout](#repository-layout)
 - [Install](#install)
   - [Prerequisites](#prerequisites)
-  - [1. Clone](#1-clone)
-  - [2. Create your local data files](#2-create-your-local-data-files)
-  - [3. Mint your slugs](#3-mint-your-slugs)
-  - [4. Install the label-generation dependencies](#4-install-the-label-generation-dependencies)
-  - [5. Generate a PDF](#5-generate-a-pdf)
+  - [Clone](#clone)
+  - [Install the Label-Generation Dependencies](#install-the-label-generation-dependencies)
+- [Configure](#configure)
+  - [Create Your Local Data Files](#create-your-local-data-files)
+  - [Project Settings](#project-settings)
 - [Usage](#usage)
-  - [Configure](#configure)
-  - [Generate labels](#generate-labels)
-  - [Print — set Page Scaling to "None" (required)](#print--set-page-scaling-to-none-required)
-  - [Apply & verify](#apply--verify)
-- [Test](#test)
-  - [Over-the-wire smoke test](#over-the-wire-smoke-test)
+  - [Run](#run)
+    - [Mint Your Slugs](#mint-your-slugs)
+    - [Generate Labels](#generate-labels)
+    - [Print — Set Page Scaling to "None" (Required)](#print--set-page-scaling-to-none-required)
+  - [Apply & Verify](#apply--verify)
+- [Development](#development)
+  - [Test](#test)
+    - [Over-the-Wire Smoke Test](#over-the-wire-smoke-test)
   - [Lint the Markdown](#lint-the-markdown)
-- [Security & privacy](#security--privacy)
-- [Project documentation](#project-documentation)
+- [Security & Privacy](#security--privacy)
+- [Project Documentation](#project-documentation)
 - [License](#license)
 
 ## Why Provide Your Own Lost+Found Service?
@@ -48,7 +50,7 @@ answers the scans.
 - Avoid any privacy leaks
 - Might be cheaper
 
-## How it works
+## How It Works
 
 Each label encodes a URL of the form `https://<your-domain>/found/<slug>`, where
 every `<slug>` is a 20-character random token (~119 bits from a CSPRNG). The
@@ -85,7 +87,7 @@ remote shared-hosting account — little more than a docroot, an `.htaccess`, an
 CGI directory — and has been deployed to and verified over the wire on exactly
 such a host. If it serves tags there, it will serve them almost anywhere.
 
-## Repository layout
+## Repository Layout
 
 ```text
 README.md              this file
@@ -106,11 +108,11 @@ output/                generated PDFs & QR PNGs — GIT-IGNORED
 Real data (contact details, slugs, the manifest, your domain) lives only in
 **git-ignored** files that you create from the committed `*.example.*` templates;
 nothing personal is ever committed. See [Install](#install) and
-[Security & privacy](#security--privacy).
+[Security & Privacy](#security--privacy).
 
 ## Install
 
-This gets you from a fresh clone to a generated label PDF.
+This gets you a working clone with the label-generation tooling installed.
 
 ### Prerequisites
 
@@ -120,17 +122,31 @@ This gets you from a fresh clone to a generated label PDF.
   FileInfo`) and Python 3.7+ — see [`found-cgi/`](found-cgi/README.md). Not
   required just to generate labels.
 
-### 1. Clone
+### Clone
 
 ```bash
 git clone <your-repo-url> diy-lost-and-found-service
 cd diy-lost-and-found-service
 ```
 
-### 2. Create your local data files
+### Install the Label-Generation Dependencies
+
+```bash
+cd print-kit
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install qrcode reportlab
+```
+
+(See [`print-kit/README.md`](print-kit/README.md) if `import qrcode` fails after
+install — it's almost always a `pip`/`python3` interpreter mismatch.)
+
+## Configure
+
+### Create Your Local Data Files
 
 The real config/data files are git-ignored; recreate blank ones from the
-committed templates, then fill them in:
+committed templates (from the repo root), then fill them in:
 
 ```bash
 ./init-local-files.sh
@@ -144,7 +160,23 @@ Edit at least:
 - **`found-cgi/config.json`** — your contact details (see
   [`found-cgi/README.md`](found-cgi/README.md) for the fields).
 
-### 3. Mint your slugs
+### Project Settings
+
+The git-ignored **`config.json`** you just created holds the project settings:
+
+| Key | Used for |
+|-----|----------|
+| `baseUrl` | The QR base URL: labels encode `<baseUrl>/found/<slug>`. `gen-labels.py` reads it as the default `--base`. |
+| `deploy.host` / `deploy.user` / `deploy.docroot` / `deploy.dataDir` | Reference values for deploying `found-cgi` to your server. The installer takes the matching settings as `DOCROOT` / `DATADIR` / `BASE` environment overrides — see [`found-cgi/INSTALL.md`](found-cgi/INSTALL.md). |
+
+Because `config.json` is git-ignored, your real domain and host never enter the
+repository.
+
+## Usage
+
+### Run
+
+#### Mint Your Slugs
 
 Each tag needs a unique, unguessable slug. Mint 100 of them (20 random
 alphanumerics each, from a CSPRNG) straight into the slug list:
@@ -158,50 +190,22 @@ overwrite an existing slug list unless you pass `-f`. Keep this file (and
 `tag-manifest.csv`, if you build one to record which tag is which) private — the
 slugs are capability tokens.
 
-### 4. Install the label-generation dependencies
+#### Generate Labels
 
-```bash
-cd print-kit
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install qrcode reportlab
-```
-
-(See [`print-kit/README.md`](print-kit/README.md) if `import qrcode` fails after
-install — it's almost always a `pip`/`python3` interpreter mismatch.)
-
-### 5. Generate a PDF
+From `print-kit/` (with the virtualenv from [Install](#install) active), turn
+your slugs into print-ready PDFs:
 
 ```bash
 python3 gen-labels.py ../found-cgi/slugs.txt ../output/found-labels-avery94103-1inch.pdf --format 1x1
 python3 gen-labels.py ../found-cgi/slugs.txt ../output/found-labels-2x2-avery94107.pdf   --format 2x2
 ```
 
-The PDFs land in the git-ignored `output/` directory. **Before printing, read
-[Usage](#usage) — the print settings matter.**
+The PDFs land in the git-ignored `output/` directory. Page 1 of every PDF is a
+calibration page; the label pages follow. See
+[`print-kit/README.md`](print-kit/README.md) for details. **Before printing,
+read the print settings below — they matter.**
 
-## Usage
-
-### Configure
-
-Project settings live in the git-ignored **`config.json`** (created in Install
-step 2 from `config.example.json`):
-
-| Key | Used for |
-|-----|----------|
-| `baseUrl` | The QR base URL: labels encode `<baseUrl>/found/<slug>`. `gen-labels.py` reads it as the default `--base`. |
-| `deploy.host` / `deploy.user` / `deploy.docroot` / `deploy.dataDir` | Reference values for deploying `found-cgi` to your server. The installer takes the matching settings as `DOCROOT` / `DATADIR` / `BASE` environment overrides — see [`found-cgi/INSTALL.md`](found-cgi/INSTALL.md). |
-
-Because `config.json` is git-ignored, your real domain and host never enter the
-repository.
-
-### Generate labels
-
-See [Install step 5](#5-generate-a-pdf) and
-[`print-kit/README.md`](print-kit/README.md). Page 1 of every PDF is a
-calibration page; the label pages follow.
-
-### Print — set Page Scaling to "None" (required)
+#### Print — Set Page Scaling to "None" (Required)
 
 The PDF is laid out at **exact size** for the Avery die-cut grid. If your PDF
 viewer or printer driver scales the page even slightly, the artwork drifts off
@@ -239,12 +243,14 @@ Print on a **laser printer or pigment inkjet** — dye-based inkjet ink smears o
 this film. Full stock-ordering and print-shop guidance is in
 [`print-kit/PRINT.md`](print-kit/PRINT.md).
 
-### Apply & verify
+### Apply & Verify
 
 Scan one printed label of **each** size with your phone and confirm the contact
 page loads **before** sticking tags on anything.
 
-## Test
+## Development
+
+### Test
 
 Run the whole suite with one command:
 
@@ -261,7 +267,7 @@ failure, skipping the end-to-end part cleanly if you have no local data yet. To
 target a **deployed** site instead of the local server, set one env var:
 `BASE=https://your-domain.example ./test/run.sh`.
 
-### Over-the-wire smoke test
+#### Over-the-Wire Smoke Test
 
 `found-cgi` ships an over-the-wire smoke test
 ([`found-cgi/smoke-test.sh`](found-cgi/README.md)) that checks the live site:
@@ -311,7 +317,7 @@ extension in agreement. Line length (`MD013`) is intentionally off — the docs
 carry lines that can't be wrapped: Markdown table rows, image alt-text, and
 copy-paste shell commands.
 
-## Security & privacy
+## Security & Privacy
 
 - **Slugs are secrets.** A slug is a ~119-bit capability token; anyone with it
   can view your contact page. `found-cgi/slugs.txt`, `tag-manifest.csv`, the
@@ -325,7 +331,7 @@ copy-paste shell commands.
   a byte-identical generic 404; responses carry `X-Robots-Tag: noindex`. Details
   in [`found-cgi/README.md`](found-cgi/README.md).
 
-## Project documentation
+## Project Documentation
 
 - **[`print-kit/README.md`](print-kit/README.md)** — generating label PDFs, the
   `config.json` geometry data, and (optional) Avery templates.
