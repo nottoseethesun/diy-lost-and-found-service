@@ -8,6 +8,21 @@ failure.
 Target (probed): Apache 2.0.64, docroot `~/your-site/`,
 existing `cgi-local/`, Python 3.7.4 confirmed at `/usr/bin/python3.7`.
 
+## Table of Contents
+
+- [1. (Workstation) Generate slugs.txt](#1-workstation-generate-slugstxt)
+- [2. (Workstation) Upload the tarball and slugs.txt](#2-workstation-upload-the-tarball-and-slugstxt)
+- [3. (your host) Extract and bootstrap](#3-your-host-extract-and-bootstrap)
+- [4. (your host) Install](#4-your-host-install)
+- [5. (your host) Full verification](#5-your-host-full-verification)
+- [6. Phone test](#6-phone-test)
+- [7. (your host) Clean up the staging files](#7-your-host-clean-up-the-staging-files)
+- [Resulting layout](#resulting-layout)
+- [Maintenance (on your host)](#maintenance-on-your-host)
+- [Overrides (rarely needed)](#overrides-rarely-needed)
+- [Rollback (on your host)](#rollback-on-your-host)
+- [Troubleshooting](#troubleshooting)
+
 ---
 
 ## 1. (Workstation) Generate slugs.txt

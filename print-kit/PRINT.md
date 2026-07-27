@@ -1,5 +1,12 @@
 # Printing the found-tag labels
 
+## Table of Contents
+
+- [Order (avery.com or Staples/Amazon)](#order-averycom-or-staplesamazon)
+- [Print — NOT on your inkjet](#print--not-on-your-inkjet)
+- [Before stickering anything](#before-stickering-anything)
+- [Files](#files)
+
 ## Order (avery.com or Staples/Amazon)
 
 - **Avery 94107-WMF10** — 2"x2" Durable Matte White Film, 10 sheets
