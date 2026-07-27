@@ -66,7 +66,7 @@ DEFAULTS = {
 }
 
 # The one and only acceptable slug shape. Anchored full-match of 20
-# URL-safe alphanumerics: no separators, no dots, no other lengths.
+# URL-safe alphanumeric characters: no separators, no dots, no other lengths.
 SLUG_PATTERN = re.compile(r"^[A-Za-z0-9]{20}$")
 
 

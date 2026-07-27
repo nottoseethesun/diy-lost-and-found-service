@@ -12,7 +12,7 @@ SetEnv FOUND_CONFIG   /home/youruser/found-data/config.json
 SetEnv FOUND_SLUGS    /home/youruser/found-data/slugs.txt
 SetEnv FOUND_TEMPLATE /home/youruser/found-data/page.html
 
-# Route /found/<slug> (exactly 20 URL-safe alphanumerics) to the CGI
+# Route /found/<slug> (exactly 20 URL-safe alphanumeric characters) to the CGI
 # via PATH_INFO. Anything else under /found falls through to the
 # filesystem and 404s without spawning a process. Deliberate split:
 # well-formed-but-unknown slugs reach the CGI and get its generic 404,

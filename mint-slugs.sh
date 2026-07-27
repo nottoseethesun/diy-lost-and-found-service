@@ -78,7 +78,7 @@ fi
 
 mkdir -p "$(dirname "$outfile")"
 
-# 20 alphanumerics per slug from Python's CSPRNG (secrets). COUNT is passed via
+# 20 alphanumeric characters per slug from Python's CSPRNG (secrets). COUNT is passed via
 # the environment, not string-interpolated, so it can't be injected.
 new_slugs="$(COUNT="$count" python3 -c '
 import os, secrets, string

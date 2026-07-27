@@ -104,7 +104,7 @@ are computationally irrelevant (see Security properties).
 **One honest asymmetry:** malformed paths get Apache's stock 404
 while well-formed unknown slugs get the CGI's 404, and the two bodies
 differ. A careful prober can therefore learn the *accepted slug
-format* (20 alphanumerics). This is deliberate: routing malformed
+format* (20 alphanumeric characters). This is deliberate: routing malformed
 requests to Apache means crawler noise and junk paths never spawn a
 CGI process. Knowing the format does not help an attacker — the
 search space is the point of the design, not the format's secrecy.
@@ -114,7 +114,7 @@ far below network jitter.
 
 ## Security properties
 
-- Slugs are 20 chars of mixed-case alphanumerics from a CSPRNG
+- Slugs are 20 mixed-case alphanumeric characters from a CSPRNG
   (~119 bits each): enumeration is not feasible.
 - `slugs.txt` holds slugs only. The slug → item mapping
   (`tag-manifest.csv`) never goes on the server.
