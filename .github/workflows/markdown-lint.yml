@@ -1,0 +1,26 @@
+name: markdown-lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyMarkdown
+        run: python -m pip install --upgrade pip pymarkdownlnt
+
+      - name: Lint all Markdown files
+        run: ./test/lint-markdown.sh

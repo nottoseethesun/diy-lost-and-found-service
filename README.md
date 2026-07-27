@@ -1,9 +1,10 @@
-![Glowing white-orange QR Code floating in space above an orange-hued Planet Earth, with a Wise Owl and Tags and Items with QR Codes on them, and transparent puzzle pieces shown. Caption is: "Scan if found.  Reunite privately.  Build your own."](./media/diy-lost-and-found_privacy-first_social-preview-for-github-project-config-half.jpg "DIY Lost+Found Banner")
-
 # DIY Lost-and-Found Service
+
+![Glowing white-orange QR Code floating in space above an orange-hued Planet Earth, with a Wise Owl and Tags and Items with QR Codes on them, and transparent puzzle pieces shown. Caption is: "Scan if found.  Reunite privately.  Build your own."](./media/diy-lost-and-found_privacy-first_social-preview-for-github-project-config-half.jpg "DIY Lost+Found Banner")
 
 [![tests](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/tests.yml)
 [![security](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/security.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/security.yml)
+[![markdown-lint](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/markdown-lint.yml/badge.svg)](https://github.com/nottoseethesun/diy-lost-and-found-service/actions/workflows/markdown-lint.yml)
 
 A self-hosted lost-and-found system built around printed **QR-code labels**.
 Stick a label on a thing you'd hate to lose; if someone finds it and scans the
@@ -29,7 +30,7 @@ system has two halves:
 
 End to end:
 
-```
+```text
 mint slugs ─► generate label PDFs (print-kit) ─► print onto Avery film ─► apply tags
                                                                               │
                           finder scans a tag ─► https://<your-domain>/found/<slug>
@@ -51,7 +52,7 @@ such a host. If it serves tags there, it will serve them almost anywhere.
 
 ## Repository layout
 
-```
+```text
 README.md              this file
 LICENSE                Apache License 2.0
 config.example.json    template for the project config (baseUrl, deploy)
@@ -248,6 +249,31 @@ clone. Run it from the `found-cgi` deploy directory:
 ```bash
 BASE=https://your-domain.example ./smoke-test.sh   # or set BASE in your environment
 ```
+
+### Lint the Markdown
+
+The docs are linted with [PyMarkdown](https://github.com/jackdewinter/pymarkdown),
+a Python Markdown linter that speaks the same `MDxxx` rule IDs as VSCode's
+markdownlint extension — so it needs no Node toolchain. Lint every Markdown
+file in the repo with one command:
+
+```bash
+./test/lint-markdown.sh
+```
+
+Install the linter once (the package is `pymarkdownlnt`; the command it provides
+is `pymarkdown`):
+
+```bash
+pipx install pymarkdownlnt        # isolated install, recommended
+# or, into any environment:  pip install pymarkdownlnt
+```
+
+Rules live in [`.pymarkdown.json`](.pymarkdown.json); the matching
+[`.markdownlint.jsonc`](.markdownlint.jsonc) keeps VSCode's markdownlint
+extension in agreement. Line length (`MD013`) is intentionally off — the docs
+carry lines that can't be wrapped: Markdown table rows, image alt-text, and
+copy-paste shell commands.
 
 ## Security & privacy
 

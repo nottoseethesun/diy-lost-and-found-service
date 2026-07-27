@@ -56,7 +56,7 @@ will be rendered inert. `phone` values must be `tel:`-form
 
 ## Request flow
 
-```
+```text
 GET /found/<slug>
   └─ docroot .htaccess: RewriteRule matches ^found/([A-Za-z0-9]{20})$ only
        └─ /cgi-local/found.cgi invoked with PATH_INFO=/found/<slug>

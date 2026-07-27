@@ -80,7 +80,7 @@ What it does, in order, dying loudly at the first problem:
 
 Expected tail of output:
 
-```
+```text
 local sanity: PASS
 wire check: PASS
 
@@ -115,7 +115,7 @@ and `cgi-local/`; the extracted directory is only staging.
 
 ## Resulting layout
 
-```
+```text
 ~/found-data/                    all system data, grouped, outside
 |-- config.json                  the docroot -- no URL maps here
 |-- page.html

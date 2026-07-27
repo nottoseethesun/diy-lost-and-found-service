@@ -1,0 +1,9 @@
+{
+  // Markdown lint config for VSCode's markdownlint extension.
+  // Kept in sync with .pymarkdown.json, which ./test/lint-markdown.sh uses.
+  //
+  // MD013 (line-length) is disabled on purpose: the docs contain lines that
+  // cannot be wrapped -- Markdown table rows, image alt-text, and copy-paste
+  // shell commands. Every other default rule stays on.
+  "MD013": false
+}

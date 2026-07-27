@@ -60,7 +60,7 @@ python3 gen-labels.py ../found-cgi/slugs.txt ../output/found-labels-2x2-avery941
 - **Alignment:** if the calibration page is uniformly shifted from the
   die-cuts, re-run with `--xshift` / `--yshift` (inches; positive = right/down).
 
-```
+```text
 positional:  SLUGS_FILE  OUTPUT_PDF
 --format     2x2 (Avery 64510/94107, 12/sheet)  [default]
              1x1 (Avery 94103, 48/sheet)
@@ -76,7 +76,7 @@ The per-format drawing geometry lives in `gen-labels.py`'s `FORMATS` table;
 Avery product metadata and the authoritative sheet geometry, so the layout
 never has to be re-derived. Shape:
 
-```
+```text
 labelTemplates
 ├── oneInchSquare[]      # 1"x1" products
 └── twoInchSquare[]      # 2"x2" products
@@ -139,7 +139,7 @@ redistribute it.
 
 If you want them, download them yourself and save them here:
 
-```
+```text
 avery-templates/
 ├── one-inch-square/AveryPresta94103SquareLabels.pdf
 └── two-inch-square/Avery64510SquareLabels.pdf   (and/or AveryPresta94107SquareLabels.pdf)
