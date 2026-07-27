@@ -29,7 +29,7 @@ jobs:
         run: |
           ./init-local-files.sh
           python -c "import json; c=json.load(open('found-cgi/config.example.json')); c.update(owner_name='Example Owner', email='owner@example.com', backup_email='backup@example.com'); json.dump(c, open('found-cgi/config.json','w'))"
-          python -c "import secrets,string; a=string.ascii_letters+string.digits; open('found-cgi/slugs.txt','w').write(chr(10).join(''.join(secrets.choice(a) for _ in range(20)) for _ in range(5))+chr(10))"
+          ./mint-slugs.sh -n 5
 
       - name: Run test suite
         run: ./test/run.sh

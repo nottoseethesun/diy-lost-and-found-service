@@ -40,6 +40,7 @@ run "smoke-test.sh syntax"         bash -n found-cgi/smoke-test.sh
 run "install.sh syntax"            bash -n found-cgi/install.sh
 run "setup.sh syntax"              bash -n found-cgi/setup.sh
 run "init-local-files.sh syntax"   bash -n init-local-files.sh
+run "mint-slugs.sh syntax"         bash -n mint-slugs.sh
 run "config.example.json valid"    python3 -m json.tool config.example.json
 run "print-kit/config.json valid"  python3 -m json.tool print-kit/config.json
 run "test/test-config.json valid"  python3 -m json.tool test/test-config.json

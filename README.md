@@ -44,7 +44,7 @@ answers the scans.
   them to let them know an item of yours has been found, then it's possible
   for the third-party to get a description of the item and divert it to themselves
   - Especially important for very valuable items
-- Avoid service interruptions from the lost+found provider going out of business
+- Avoid service interruptions for any reason, including from the lost+found provider going out of business
 - Avoid any privacy leaks
 - Might be cheaper
 
@@ -93,6 +93,7 @@ LICENSE                Apache License 2.0
 config.example.json    template for the project config (baseUrl, deploy)
 config.json            your real project config — GIT-IGNORED (bootstrapped)
 init-local-files.sh    recreate git-ignored data files from *.example.* templates
+mint-slugs.sh          mint capability slugs into found-cgi/slugs.txt
 tag-manifest.example.csv   template for tag-manifest.csv
 tag-manifest.csv       your tag#→slug→url record — GIT-IGNORED
 print-kit/             label generation           → print-kit/README.md
@@ -145,17 +146,17 @@ Edit at least:
 
 ### 3. Mint your slugs
 
-Each tag needs a unique, unguessable slug. Generate 100 of them (20 random
-alphanumerics each) straight into the slug list:
+Each tag needs a unique, unguessable slug. Mint 100 of them (20 random
+alphanumerics each, from a CSPRNG) straight into the slug list:
 
 ```bash
-python3 -c "import secrets,string; a=string.ascii_letters+string.digits; \
-print('\n'.join(''.join(secrets.choice(a) for _ in range(20)) for _ in range(100)))" \
-  > found-cgi/slugs.txt
+./mint-slugs.sh
 ```
 
-Keep this file (and `tag-manifest.csv`, if you build one to record which tag is
-which) private — the slugs are capability tokens.
+Pass `-n COUNT` for a different number (e.g. `./mint-slugs.sh -n 250`); it won't
+overwrite an existing slug list unless you pass `-f`. Keep this file (and
+`tag-manifest.csv`, if you build one to record which tag is which) private — the
+slugs are capability tokens.
 
 ### 4. Install the label-generation dependencies
 
