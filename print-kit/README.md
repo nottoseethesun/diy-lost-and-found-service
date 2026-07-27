@@ -3,6 +3,15 @@
 Everything needed to turn a list of tag slugs into print-ready PDF sheets of
 unique QR-code labels for Avery blank stock.
 
+## Table of Contents
+
+- [Contents](#contents)
+- [Requirements](#requirements)
+- [Generating labels](#generating-labels)
+- [config.json](#configjson)
+  - [Adding a new Avery product](#adding-a-new-avery-product)
+- [Avery templates (optional)](#avery-templates-optional)
+
 ## Contents
 
 | Path | What it is |

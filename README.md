@@ -13,6 +13,41 @@ any of your personal details being printed on the label itself.** You mint the
 codes, print them onto peel-and-stick Avery film, and host a tiny page that
 answers the scans.
 
+## Table of Contents
+
+- [Why Provide Your Own Lost+Found Service?](#why-provide-your-own-lostfound-service)
+- [How it works](#how-it-works)
+- [Repository layout](#repository-layout)
+- [Install](#install)
+  - [Prerequisites](#prerequisites)
+  - [1. Clone](#1-clone)
+  - [2. Create your local data files](#2-create-your-local-data-files)
+  - [3. Mint your slugs](#3-mint-your-slugs)
+  - [4. Install the label-generation dependencies](#4-install-the-label-generation-dependencies)
+  - [5. Generate a PDF](#5-generate-a-pdf)
+- [Usage](#usage)
+  - [Configure](#configure)
+  - [Generate labels](#generate-labels)
+  - [Print — set Page Scaling to "None" (required)](#print--set-page-scaling-to-none-required)
+  - [Apply & verify](#apply--verify)
+- [Test](#test)
+  - [Over-the-wire smoke test](#over-the-wire-smoke-test)
+  - [Lint the Markdown](#lint-the-markdown)
+- [Security & privacy](#security--privacy)
+- [Project documentation](#project-documentation)
+- [License](#license)
+
+## Why Provide Your Own Lost+Found Service?
+
+- Avoid exposure to Man-in-the-Middle attacks
+  - For example, if you are using a third-party service and someone contacts
+  them to let them know an item of yours has been found, then it's possible
+  for the third-party to get a description of the item and divert it to themselves
+  - Especially important for very valuable items
+- Avoid service interruptions from the lost+found provider going out of business
+- Avoid any privacy leaks
+- Might be cheaper
+
 ## How it works
 
 Each label encodes a URL of the form `https://<your-domain>/found/<slug>`, where

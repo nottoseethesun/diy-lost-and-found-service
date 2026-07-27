@@ -11,6 +11,17 @@ exits when the response is written, so there is no daemon, no state,
 and nothing to leak. Configuration and data are re-read on every
 request, so edits take effect immediately.
 
+## Table of Contents
+
+- [Files](#files)
+- [config.json fields](#configjson-fields)
+- [Request flow](#request-flow)
+- [Behavior on unsupported URLs](#behavior-on-unsupported-urls)
+- [Security properties](#security-properties)
+- [Validation status](#validation-status)
+- [Maintenance](#maintenance)
+- [Local smoke test (any machine with python3)](#local-smoke-test-any-machine-with-python3)
+
 ## Files
 
 | File                  | Role                                            | Edit?           |
