@@ -5,14 +5,14 @@ unique QR-code labels for Avery blank stock.
 
 ## Table of Contents
 
-- [Contents](#contents)
+- [Files](#files)
 - [Requirements](#requirements)
 - [Generating labels](#generating-labels)
 - [config.json](#configjson)
   - [Adding a new Avery product](#adding-a-new-avery-product)
 - [Avery templates (optional)](#avery-templates-optional)
 
-## Contents
+## Files
 
 | Path | What it is |
 |------|-----------|
