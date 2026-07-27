@@ -179,7 +179,7 @@ repository.
 #### Mint Your Slugs
 
 Each tag needs a unique, unguessable slug. Mint 100 of them (20 random
-alphanumerics each, from a CSPRNG) straight into the slug list:
+alphanumeric characters each, from a CSPRNG) straight into the slug list:
 
 ```bash
 ./mint-slugs.sh
