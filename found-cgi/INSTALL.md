@@ -1,7 +1,7 @@
 # INSTALL — found-tag system on your host (your shared host shared hosting)
 
 Flow: prepare one file on your workstation, upload the tarball plus
-that file to your host, then run two scripts ON KONTAR. Every command is
+that file to your host, then run two scripts there. Every command is
 copy-paste ready; the scripts abort loudly with a diagnosis on any
 failure.
 
@@ -141,7 +141,7 @@ and `cgi-local/`; the extracted directory is only staging.
 |                                rewrite rule + SetEnv pointers
 |-- .well-known/                 untouched
 |-- README.txt                   untouched
-|-- doorsinpoetryandhistory@     untouched
+|-- your-other-site@             untouched
 `-- cgi-local/
     |-- found.cgi                the handler -- only file in docroot
     `-- php*.fcgi                untouched

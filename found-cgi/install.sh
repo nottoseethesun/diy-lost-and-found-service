@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# install.sh -- install the found-tag system. RUN THIS ON KONTAR,
+# install.sh -- install the found-tag system. RUN THIS ON YOUR HOST,
 # from inside the extracted found-cgi/ directory, after placing your
 # workstation-generated slugs.txt in this directory.
 #
